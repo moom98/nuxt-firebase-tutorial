@@ -83,5 +83,16 @@
 <script>
 export default {
   name: 'IndexPage',
+  // indexにアクセスすると自動的に/bookへリダイレクトする
+  asyncData({redirect}){
+    redirect('/book');
+  }
+
+  // todo: 重複しないようにLodashの_searchなどを用いる
+  // todo: 削除するとidがずれるのでインクリメントidを別に作成する
+  // todo: 初回登録時、保存→編集を編集→保存にする
+  // todo: ソート機能（ソートidを追加する）
+  // todo: レイアウトの調整
 }
 </script>
+

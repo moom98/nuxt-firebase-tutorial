@@ -25,6 +25,7 @@
       </v-col>
     </v-row>
     <div v-show="!isFound" class="mt-10">検索結果は0件でした</div>
+
     <v-row class="mt-10">
       <v-col
       v-for="(book, index) in searchResults" :key="index"
@@ -34,14 +35,9 @@
           <v-row>
             <v-col
             cols="4">
-              <v-img
-                :src="book.img"
-                height="200px"
-                contain
-              ></v-img>
+              <v-img :src="book.img"></v-img>
             </v-col>
-            <v-col
-            cols="8">
+            <v-col ols="8">
             <v-card-title>{{ book.title }}</v-card-title>
             <v-card-text>{{ book.description }}</v-card-text>
             <v-spacer></v-spacer>
@@ -50,7 +46,8 @@
               class="mx-2"
               fab
               dark
-              color="indigo">
+              color="indigo"
+              @click="addBookList(index)">
                 <v-icon dark>
                   mdi-plus
                 </v-icon>
@@ -74,10 +71,18 @@ export default {
             }
           },
   methods: {
+    addBookList(index){
+      // $emitで親コンポーネントにイベントを発火
+      // book.vueでaddBookListメソッドを実行
+      // その際に、searchResultsのindex番目の要素を引数として渡す
+      this.$emit('add-book-list', this.searchResults[index])
+      // console.log(this.searchResults[index]);
+    },
+
     async search(keyword) {
       this.searchResults = []
       // クエリーストリングを作成
-      const baseURL = 'https://www.googleapis.com/books/v1/volumes?q='
+      const baseURL = 'https://www.googleapis.com/books/v1/volumes?'
       const params = {
         q: `intitle:${keyword}`,
         maxResults: 40,
