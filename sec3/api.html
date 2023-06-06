@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>google books api</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.11/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="keyword">
+        <button @click="search(keyword)">検索する</button>
+        <script>
+            let app = new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        keyword: '',
+                        searchResults: '',
+                    }
+                },
+                methods: {
+                    async search(keyword) {
+                        this.searchResults = []
+                        // クエリーストリングを作成
+                        const baseURL = 'https://www.googleapis.com/books/v1/volumes?q='
+                        const params = {
+                            q: `intitle:${keyword}`,
+                            maxResults: 40,
+                        }
+
+                        const queryParams = new URLSearchParams(params)
+                        const url = baseURL + queryParams
+                        console.log(url);
+
+
+                        // fetchでJSONを取得
+                        const response = await fetch(url)
+                        .then(response => response.json())
+                        console.log(response.items);
+
+                        // 必要な情報を配列にpush
+                        for(let book of response.items ){
+                            let title = book.volumeInfo.title
+                            let img = book.volumeInfo.imageLinks
+                            let description = book.volumeInfo.description
+                            this.searchResults.push({
+                                title: title ? title : 'No title',
+                                img: img ? img.thumbnail : '',
+                                description : description ? description.slice(0, 40) : 'No description'
+                            })
+                        }
+                }
+            }
+            });
+        </script>
+    </div>
+</body>
+</html>
